@@ -10,7 +10,7 @@
   }
   .sub-menu li:first-child:hover .sub-sub-menu {
     display: block;
-    top: -40px;
+    top: 0;
     margin-left: 1px;
     width: 100%;
   }

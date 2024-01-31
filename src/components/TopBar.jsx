@@ -9,7 +9,7 @@ import {
 function TopBar() {
   return (
     <div className="bg-gray-800 text-white py-2">
-      <div className="lg:max-w-7xl w-[90%] mx-auto flex justify-between items-center">
+      <div className="w-[90%] mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <a href="#" className="text-white">
             <FontAwesomeIcon icon={faFacebookF} />

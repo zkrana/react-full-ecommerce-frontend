@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Container, Alert } from "@mui/material";
-import Header from "./header/Header";
+import Header from "@/components/Header";
 import Banner from "@/components/Banner";
+import EcomAll from "@/components/ecommerce/EcomAll";
 
 function Dashboard() {
   const [showAlert, setShowAlert] = useState(true);
@@ -36,8 +37,8 @@ function Dashboard() {
       <div className="head">
         <Header username={username} userId={userId} />
       </div>
-      <Container>
-        <div className="user-main-body mt-5">
+      <div className="w-[90%] mx-auto user-main-body mt-5">
+        <div className="w-[90%] mx-auto">
           {showAlert && (
             <Alert severity="success">
               Welcome,{" "}
@@ -49,7 +50,8 @@ function Dashboard() {
           )}
         </div>
         <Banner />
-      </Container>
+        <EcomAll />
+      </div>
     </div>
   );
 }

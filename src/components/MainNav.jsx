@@ -7,7 +7,7 @@ async function fetchCategories() {
     "http://localhost/reactcrud/backend/auth/api/categories/categories.php"
   );
   const data = await response.json();
-  return data.categories; // Adjust this based on your API response structure
+  return data; // Adjust this based on your API response structure
 }
 
 function createNestedMenu(categories, parentId = null) {
@@ -16,7 +16,7 @@ function createNestedMenu(categories, parentId = null) {
     if (category.parent_category_id === parentId) {
       const children = createNestedMenu(categories, category.id);
       if (children.length) {
-        category.children = children;
+        category.subcategories = children;
       }
       nestedMenu.push(category);
     }
@@ -25,9 +25,13 @@ function createNestedMenu(categories, parentId = null) {
 }
 
 function renderSubMenu(subCategory) {
+  if (!subCategory.subcategories || subCategory.subcategories.length === 0) {
+    return null;
+  }
+
   return (
     <ul className="absolute sub-sub-menu left-full top-0 hidden bg-white shadow-md py-2 ml-2">
-      {subCategory.children.map((subSubCategory) => (
+      {subCategory.subcategories.map((subSubCategory) => (
         <li key={subSubCategory.id} className="relative group">
           <Link href={`/subcategory/${subSubCategory.id}`}>
             <span className="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-300 cursor-pointer h-11">
@@ -41,6 +45,10 @@ function renderSubMenu(subCategory) {
 }
 
 function renderNestedMenu(menu) {
+  if (!menu || menu.length === 0) {
+    return null;
+  }
+
   return (
     <ul className="absolute sub-menu left-0 top-0 hidden group-hover:block bg-white shadow-md py-2">
       {menu.map((category) => (
@@ -50,9 +58,7 @@ function renderNestedMenu(menu) {
               {category.name}
             </span>
           </Link>
-          {category.children && (
-            <div className="relative group">{renderSubMenu(category)}</div>
-          )}
+          {renderSubMenu(category)}
         </li>
       ))}
     </ul>
@@ -80,12 +86,14 @@ function MainNav() {
   }, []);
 
   useEffect(() => {
-    const menu = createNestedMenu(categories);
-    setNestedMenu(menu);
+    if (categories && categories.length > 0) {
+      const menu = createNestedMenu(categories);
+      setNestedMenu(menu);
+    }
   }, [categories]);
 
   return (
-    <nav className=" h-12">
+    <nav className="h-12">
       {loading ? (
         <p>Loading categories...</p>
       ) : (
@@ -97,7 +105,8 @@ function MainNav() {
                   {category.name}
                 </span>
               </Link>
-              {category.children && renderNestedMenu(category.children)}
+              {category.subcategories &&
+                renderNestedMenu(category.subcategories)}
             </li>
           ))}
         </ul>

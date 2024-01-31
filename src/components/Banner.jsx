@@ -25,16 +25,16 @@ function Banner() {
   }, []);
 
   return (
-    <div className="lg:max-w-7xl w-[95%] mx-auto overflow-hidden rounded mt-2">
+    <div className="w-[90%] mx-auto overflow-hidden rounded mt-2">
       {loading ? (
         <p>Loading banners...</p>
       ) : (
         <div className=" w-full">
           {banners.length > 0 ? (
             banners.map((banner) => (
-              <div key={banner.id} className=" w-full">
+              <div key={banner.id} className="w-full h-[450px]">
                 <img
-                  className=" w-full h-96 object-cover"
+                  className=" w-full h-full object-cover"
                   src={`http://localhost/reactcrud/backend/auth/assets/banner/${banner.photo_name}`}
                   alt={banner.photo_name}
                 />
