@@ -8,7 +8,7 @@ import TopBar from "@/components/TopBar";
 import Search from "@/components/Search";
 import Link from "next/link";
 
-function Header({ username, userId }) {
+function HeaderBox({ username, userId }) {
   const [user, setUser] = useState(false);
   const [userPhoto, setUserPhoto] = useState(null); // New state to store user photo
   const userDropdownRef = useRef(null);
@@ -206,4 +206,4 @@ function Header({ username, userId }) {
   );
 }
 
-export default Header;
+export default HeaderBox;

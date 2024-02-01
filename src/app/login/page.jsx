@@ -38,6 +38,7 @@ function Login() {
       })
       .then((response) => {
         console.log(response);
+
         if (response.data.status === "success") {
           sessionStorage.setItem("loggedIn", true);
           sessionStorage.setItem(
@@ -45,7 +46,7 @@ function Login() {
             JSON.stringify(response.data.data)
           );
 
-          window.location.href = "/dashboard";
+          window.location.href = "/dashboard"; // Redirect to the dashboard
         } else {
           setError(response.data.message);
         }

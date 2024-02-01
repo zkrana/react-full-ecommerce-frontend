@@ -1,5 +1,7 @@
 "use client";
+// components/ecommerce/category/CategoryList.jsx
 import React, { useState, useEffect } from "react";
+import Link from "next/link"; // Use `next/link` for Next.js
 
 function CategoryList() {
   const [categories, setCategories] = useState([]);
@@ -36,7 +38,6 @@ function CategoryList() {
     return <p>Loading categories...</p>;
   }
 
-  // Function to calculate the total product count for a category including its subcategories
   function calculateTotalProductCount(category) {
     let totalProductCount = category.product_count || 0;
 
@@ -49,7 +50,6 @@ function CategoryList() {
     return totalProductCount;
   }
 
-  // Flatten all categories (including subcategories) and select the top 4 based on the total product count
   const allCategories = categories.flatMap((category) => [
     category,
     ...category.subcategories,
@@ -60,10 +60,15 @@ function CategoryList() {
       (a, b) => calculateTotalProductCount(b) - calculateTotalProductCount(a)
     );
 
-  // Select the first 4 categories
   const slicedCategories = sortedCategories.slice(0, 4);
 
-  console.log("Selected categories:", slicedCategories);
+  const handleShowAllClick = (categoryId) => {
+    // Use Next.js router to navigate to the dynamic category page
+    import("next/router").then((nextRouter) => {
+      const router = nextRouter.default;
+      router.push(`/categories/${categoryId}`);
+    });
+  };
 
   return (
     <div className="flex flex-wrap gap-8">
@@ -89,9 +94,19 @@ function CategoryList() {
                 {calculateTotalProductCount(category) !== 1 ? "" : ""})
               </span>
             </div>
-            <a className=" inline-block text-red-300 cursor-pointer">
-              Show All
-            </a>
+            {/* Use Link from next/link to navigate to the dynamic category page */}
+            <Link
+              key={category.id}
+              href={`/categories/${category.id}`}
+              passHref
+            >
+              <span
+                onClick={() => handleShowAllClick(category.id)}
+                className="inline-block text-red-300 cursor-pointer"
+              >
+                Show All
+              </span>
+            </Link>
           </div>
         </div>
       ))}

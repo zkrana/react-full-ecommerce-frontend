@@ -33,7 +33,7 @@ function renderSubMenu(subCategory) {
     <ul className="absolute sub-sub-menu left-full top-0 hidden bg-white shadow-md py-2 ml-2">
       {subCategory.subcategories.map((subSubCategory) => (
         <li key={subSubCategory.id} className="relative group">
-          <Link href={`/subcategory/${subSubCategory.id}`}>
+          <Link href={`categories/subcategory/${subSubCategory.id}`}>
             <span className="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-300 cursor-pointer h-11">
               {subSubCategory.name}
             </span>
@@ -53,7 +53,7 @@ function renderNestedMenu(menu) {
     <ul className="absolute sub-menu left-0 top-0 hidden group-hover:block bg-white shadow-md py-2">
       {menu.map((category) => (
         <li key={category.id} className="relative group">
-          <Link href={`/category/${category.id}`}>
+          <Link href={`/categories/subcategory/${category.id}`}>
             <span className="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-300 cursor-pointer h-11">
               {category.name}
             </span>
@@ -100,7 +100,7 @@ function MainNav() {
         <ul className="main-menu flex items-center space-x-6 h-full">
           {nestedMenu.map((category) => (
             <li key={category.id} className="relative group">
-              <Link href={`/category/${category.id}`}>
+              <Link href={`/categories/${category.id}`}>
                 <span className="flex items-center text-gray-800 hover:text-gray-600 transition duration-300 cursor-pointer h-11">
                   {category.name}
                 </span>

@@ -1,7 +1,8 @@
 "use client";
+// Dashboard.js
 import { useEffect, useState } from "react";
 import { Container, Alert } from "@mui/material";
-import Header from "@/components/Header";
+import Header from "../../components/Header";
 import Banner from "@/components/Banner";
 import EcomAll from "@/components/ecommerce/EcomAll";
 
@@ -10,17 +11,13 @@ function Dashboard() {
 
   // Retrieve userData from session storage
   const userData = JSON.parse(sessionStorage.getItem("userData"));
-  // console.log("userData:", userData); // Log userData to console
-  // Access userId as userData?.userId
   const userId = userData?.userId;
-  // console.log("userId:", userId); // Log userId to console
   const username = userData?.username;
 
   useEffect(() => {
     const loggedIn = sessionStorage.getItem("loggedIn");
-    if (!loggedIn) {
-      // Redirect to the login page if not logged in
-      window.location.href = "/";
+    if (!loggedIn || !userId) {
+      window.location.href = "/"; // Redirect to login if not logged in
     }
 
     // Show the alert after 5 seconds
@@ -30,12 +27,14 @@ function Dashboard() {
 
     // Cleanup the timeout to prevent memory leaks
     return () => clearTimeout(alertTimeout);
-  }, []);
+  }, [userId]);
 
   return (
     <div className="">
       <div className="head">
-        <Header username={username} userId={userId} />
+        {userId && ( // Only render the Header if userId is available
+          <Header username={username} userId={userId} />
+        )}
       </div>
       <div className="w-[90%] mx-auto user-main-body mt-5">
         <div className="w-[90%] mx-auto">

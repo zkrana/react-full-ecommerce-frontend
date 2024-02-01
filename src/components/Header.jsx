@@ -10,7 +10,7 @@ import Link from "next/link";
 
 function Header({ username, userId }) {
   const [user, setUser] = useState(false);
-  const [userPhoto, setUserPhoto] = useState(null); // New state to store user photo
+  const [userPhoto, setUserPhoto] = useState(null);
   const userDropdownRef = useRef(null);
 
   const handleClickOutside = (event) => {
@@ -23,11 +23,8 @@ function Header({ username, userId }) {
   };
 
   const handleLogout = () => {
-    // Perform any additional cleanup or logout logic if needed
     sessionStorage.removeItem("loggedIn");
     sessionStorage.removeItem("userData");
-
-    // Redirect to the logout page or any other page
     window.location.href = "/logout";
   };
 
@@ -43,16 +40,13 @@ function Header({ username, userId }) {
       const formData = new FormData();
       formData.append("file", selectedFile);
 
-      // Check if userId is available before making the API call
       if (!userId) {
         console.error("User ID is missing.");
         return;
       }
 
-      // Append userId as a URL parameter
       const url = `http://localhost/reactcrud/backend/auth/api/photo-upload.php?userId=${userId}`;
 
-      // Make an API request to your PHP backend for photo upload
       const response = await axios.post(url, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -61,32 +55,37 @@ function Header({ username, userId }) {
 
       console.log("Photo upload successful:", response.data);
 
-      // Update the user photo in the component state directly
       setUserPhoto(response.data.filePath);
     } catch (error) {
       console.error("Error uploading photo:", error);
     }
   };
 
+  const fetchUserPhoto = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost/reactcrud/backend/auth/api/get-user-photo.php?userId=${userId}`
+      );
+
+      setUserPhoto(response.data.filePath);
+      setUser(false); // Initially hide the dropdown
+    } catch (error) {
+      console.error("Error fetching user photo:", error);
+    }
+  };
+
+  const toggleUserDropdown = () => {
+    setUser((prevUser) => !prevUser);
+  };
+
   useEffect(() => {
+    const userData = JSON.parse(sessionStorage.getItem("userData"));
+
+    if (userData && userData.userId) {
+      fetchUserPhoto();
+    }
+
     document.addEventListener("mousedown", handleClickOutside);
-
-    // Fetch user photo when the component mounts
-    const fetchUserPhoto = async () => {
-      try {
-        // Make an API request to retrieve user photo
-        const response = await axios.get(
-          `http://localhost/reactcrud/backend/auth/api/get-user-photo.php?userId=${userId}`
-        );
-
-        // Update the user photo in the component state
-        setUserPhoto(response.data.filePath);
-      } catch (error) {
-        console.error("Error fetching user photo:", error);
-      }
-    };
-
-    fetchUserPhoto();
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -121,7 +120,7 @@ function Header({ username, userId }) {
               >
                 <div
                   className="d-u w-11 h-11 rounded-full bg-white border border-gray-200 p-1 flex justify-center items-center text-white cursor-pointer"
-                  onClick={() => setUser(!user)}
+                  onClick={toggleUserDropdown}
                 >
                   <img
                     src={`http://localhost/reactcrud/backend/auth/${userPhoto}`}
