@@ -1,5 +1,4 @@
 "use client";
-// components/ecommerce/category/CategoriesPage.jsx
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
@@ -10,9 +9,12 @@ const CategoriesPage = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch(
-          "http://localhost/reactcrud/backend/auth/api/categories/categories.php"
-        );
+        const response = await fetch("http://localhost:3000/api/categories/");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
         const data = await response.json();
 
         if (data) {
@@ -21,7 +23,7 @@ const CategoriesPage = () => {
           console.error("Invalid data structure in API response");
         }
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error("Error fetching categories:", error.message);
       } finally {
         setLoading(false);
       }
@@ -32,19 +34,11 @@ const CategoriesPage = () => {
 
   useEffect(() => {
     console.log("Updated categories:", categories);
-  }, [categories]); // Log categories whenever it is updated
+  }, [categories]);
 
   if (loading) {
     return <p>Loading categories...</p>;
   }
-
-  const handleShowAllClick = (categoryId) => {
-    // Use Next.js router to navigate to the dynamic category page
-    import("next/router").then((nextRouter) => {
-      const router = nextRouter.default;
-      router.push(`/categories/${categoryId}`);
-    });
-  };
 
   return (
     <div>
@@ -58,7 +52,13 @@ const CategoriesPage = () => {
           >
             <div className="ecom-cat-photo w-32 h-32 rounded-sm border border-slate-200 bg-gray-300 flex justify-center items-center">
               <img
-                src={`http://localhost/reactcrud/backend/auth/assets/categories/${category.id}/${category.photo_name}`}
+                src={`http://localhost/reactcrud/backend/auth/assets/categories/${
+                  category.id
+                }/${
+                  category.category_photo
+                    ? category.category_photo.split("/").pop()
+                    : "default-image.jpg"
+                }`}
                 alt={`Category Image: ${category.name}`}
                 className="w-full h-full object-fill"
               />
@@ -69,21 +69,21 @@ const CategoriesPage = () => {
                   {category.name}
                 </span>
                 <span className="block w-1/2 text-gray-400 text-sm text-right">
-                  ({category.product_count}
-                  {category.product_count !== 1 ? "s" : ""})
+                  {category.parent_category_id !== undefined ? (
+                    <>
+                      ({category.product_count}
+                      {category.product_count !== 1 ? "s" : ""})
+                    </>
+                  ) : (
+                    "(Product count not available)"
+                  )}
                 </span>
               </div>
-              {/* Use Link from next/link to navigate to the dynamic category page */}
-              <Link
-                key={category.id}
-                href={`/categories/${category.id}`}
-                passHref
-              >
-                <span
-                  onClick={() => handleShowAllClick(category.id)}
-                  className="inline-block text-red-300 cursor-pointer"
-                >
-                  Show All
+
+              {/* Use Link to navigate to the dynamic category page */}
+              <Link href={`/categories/${category.id}`} passHref>
+                <span className="inline-block text-red-300 cursor-pointer">
+                  Show Details
                 </span>
               </Link>
             </div>

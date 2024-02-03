@@ -59,19 +59,19 @@ function Register() {
     event.preventDefault();
 
     axios
-      .post("http://localhost/reactcrud/backend/auth/api/register.php", {
+      .post("http://localhost:3000/api/users", {
         username: username,
         email: email,
         password: password,
-        rePassword: rePassword,
       })
+
       .then((response) => {
         console.log(response);
         setApiResponse(response.data.message);
       })
       .catch((error) => {
         console.error(error);
-        console.log(error.response); // Log the entire error object
+        console.log(error.response);
         setApiResponse(error.response.data.message);
       });
   };

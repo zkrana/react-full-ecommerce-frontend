@@ -1,39 +1,30 @@
 // Import the query function from "@/utils/db"
 import { query } from "@/utils/db";
 
-// GET request handler for retrieving categories with product count
+// GET request handler for retrieving products
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const categoryId = searchParams.get("categoryId");
+    const productId = searchParams.get("productId");
 
-    let categoryData;
+    let productData;
 
-    if (categoryId) {
-      // Fetch a specific category by ID with product count
-      categoryData = await query({
-        query: `
-          SELECT c.*, COUNT(p.id) as product_count
-          FROM categories c
-          LEFT JOIN products p ON c.id = p.category_id
-          WHERE c.id = ?
-          GROUP BY c.id
-        `,
-        values: [categoryId],
+    if (productId) {
+      // Fetch a specific product by ID
+      const result = await query({
+        query: "SELECT * FROM products WHERE id = ?",
+        values: [productId],
       });
+
+      productData = result[0]; // Extract the first result from the array
     } else {
-      // Fetch all categories with product count
-      categoryData = await query({
-        query: `
-          SELECT c.*, COUNT(p.id) as product_count
-          FROM categories c
-          LEFT JOIN products p ON c.id = p.category_id
-          GROUP BY c.id
-        `,
+      // Fetch all products
+      productData = await query({
+        query: "SELECT * FROM products",
       });
     }
 
-    return new Response(JSON.stringify(categoryData), { status: 200 });
+    return new Response(JSON.stringify(productData), { status: 200 });
   } catch (error) {
     console.error("Error in GET request:", error);
     return new Response(JSON.stringify("Internal Server Error"), {
