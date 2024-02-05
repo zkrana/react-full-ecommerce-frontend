@@ -1,8 +1,10 @@
-"use client";
+// pages/categories/[categoryId].jsx
+
 "use client";
 import React, { useEffect, useState } from "react";
 
 const CategoryDetailPage = ({ params }) => {
+  // console.log(params.categoryId);
   const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,8 +14,9 @@ const CategoryDetailPage = ({ params }) => {
       try {
         // Fetch category data using the categoryId
         const response = await fetch(
-          `http://localhost:3000/api/categories/${params.categoryId}`
+          `http://localhost:3000/api/categories?categoryId=${params.categoryId}`
         );
+        // console.log(categoryId);
 
         if (!response.ok) {
           if (response.status === 404) {
@@ -32,22 +35,27 @@ const CategoryDetailPage = ({ params }) => {
       }
     }
 
-    fetchData();
-  }, []);
+    if (params.categoryId) {
+      fetchData();
+    } else {
+      // Handle case where categoryId is not defined (e.g., initial render)
+      setLoading(false);
+    }
+  }, [params.categoryId]); // Ensure dependency on categoryId
 
   if (loading) {
     return <p>Loading category...</p>;
   }
 
   if (error) {
-    return <p>Error loading category: {error}</p>;
+    return <p>Error loading category. Please try again later.</p>;
   }
 
   return (
     <div>
       {category ? (
         <div>
-          <h1>Category ID: {category.id}</h1>
+          <h1>Category ID: {params.categoryId}</h1>
           <h2>Category Name: {category.name}</h2>
           {/* Add other details as needed */}
         </div>

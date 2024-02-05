@@ -1,4 +1,4 @@
-import { query } from "@/utils/db";
+import { query } from "../../../utils/db";
 
 // GET request handler
 export async function GET(request) {

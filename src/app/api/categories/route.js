@@ -1,5 +1,5 @@
 // Import the query function from "@/utils/db"
-import { query } from "@/utils/db";
+import { query } from "../../../utils/db";
 
 // GET request handler for retrieving categories with product count
 export async function GET(request) {
@@ -21,6 +21,13 @@ export async function GET(request) {
         `,
         values: [categoryId],
       });
+
+      if (categoryData.length === 0) {
+        // Category not found
+        return new Response(JSON.stringify({ error: "Category not found" }), {
+          status: 404,
+        });
+      }
     } else {
       // Fetch all categories with product count
       categoryData = await query({
@@ -36,7 +43,7 @@ export async function GET(request) {
     return new Response(JSON.stringify(categoryData), { status: 200 });
   } catch (error) {
     console.error("Error in GET request:", error);
-    return new Response(JSON.stringify("Internal Server Error"), {
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
     });
   }

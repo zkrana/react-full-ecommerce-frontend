@@ -1,5 +1,5 @@
 // Import the query function from "@/utils/db"
-import { query } from "@/utils/db";
+import { query } from "../../../utils/db";
 
 // GET request handler for retrieving products
 export async function GET(request) {

@@ -1,5 +1,5 @@
 // Import necessary modules
-import { query } from "@/utils/db";
+import { query } from "../../../../utils/db";
 import bcrypt from "bcryptjs";
 
 // POST request handler

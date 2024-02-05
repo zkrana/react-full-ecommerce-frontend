@@ -1,15 +1,15 @@
-import mysql from "mysql2/promise";
+// Create the pool once (outside the query function)
+const pool = await mysql.createPool({
+  host: process.env.MYSQL_HOST,
+  port: process.env.MYSQL_PORT,
+  database: process.env.MYSQL_DATABASE,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  connectionLimit: 10,
+});
 
+// Use the pool in your query function
 export async function query({ query, values = [] }) {
-  const pool = await mysql.createPool({
-    host: process.env.MYSQL_HOST,
-    port: process.env.MYSQL_PORT,
-    database: process.env.MYSQL_DATABASE,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    connectionLimit: 10,
-  });
-
   try {
     console.log("Executing query:", query, "with values:", values);
     const [results] = await pool.execute(query, values);
@@ -22,7 +22,5 @@ export async function query({ query, values = [] }) {
         error.message
       }. Query: ${query}, Values: ${JSON.stringify(values)}`
     );
-  } finally {
-    pool.end();
   }
 }

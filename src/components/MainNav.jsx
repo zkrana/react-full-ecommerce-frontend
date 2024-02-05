@@ -3,9 +3,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 async function fetchCategories() {
-  const response = await fetch(
-    "http://localhost/reactcrud/backend/auth/api/categories/categories.php"
-  );
+  const response = await fetch("http://localhost:3000/api/categories");
   const data = await response.json();
   return data; // Adjust this based on your API response structure
 }

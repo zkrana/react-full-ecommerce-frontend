@@ -1,5 +1,5 @@
 // Your component file (e.g., src/components/CheckComponent.js)
-import { query } from "@/utils/db"; // Adjust the path as needed
+import { query } from "../../utils/db"; // Adjust the path as needed
 
 const Check = async () => {
   try {

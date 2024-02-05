@@ -59,12 +59,11 @@ function Register() {
     event.preventDefault();
 
     axios
-      .post("http://localhost:3000/api/users", {
+      .post("http://localhost:3000/api/auth/register", {
         username: username,
         email: email,
         password: password,
       })
-
       .then((response) => {
         console.log(response);
         setApiResponse(response.data.message);
@@ -72,7 +71,7 @@ function Register() {
       .catch((error) => {
         console.error(error);
         console.log(error.response);
-        setApiResponse(error.response.data.message);
+        setApiResponse(error.response.data.error || "Internal Server Error");
       });
   };
 
