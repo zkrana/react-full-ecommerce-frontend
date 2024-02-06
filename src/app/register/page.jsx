@@ -59,7 +59,7 @@ function Register() {
     event.preventDefault();
 
     axios
-      .post("http://localhost:3000/api/auth/register", {
+      .post("http://localhost:3000/api/auth/users", {
         username: username,
         email: email,
         password: password,
